@@ -1,9 +1,11 @@
 require 'faraday'
-require 'multi_json'
 
 module Twitter
   module Response
     class ParseJson < Faraday::Response::Middleware
+      dependency {
+        require 'json' unless defined?(JSON)
+      }
 
       def parse(body)
           case body
@@ -14,7 +16,7 @@ module Twitter
           when 'false'
             false
           else
-            MultiJson.load(body)
+            JSON.load(body)
           end
       end
 
