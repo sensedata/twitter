@@ -3,10 +3,6 @@ require 'faraday'
 module Twitter
   module Response
     class ParseJson < Faraday::Response::Middleware
-      dependency {
-        require 'json' unless defined?(JSON)
-      }
-
       def parse(body)
           case body
           when ''
@@ -16,7 +12,7 @@ module Twitter
           when 'false'
             false
           else
-            JSON.load(body)
+            Oj.load(body)
           end
       end
 
