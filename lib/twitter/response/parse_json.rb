@@ -1,4 +1,5 @@
 require 'faraday'
+require 'oj'
 
 module Twitter
   module Response
