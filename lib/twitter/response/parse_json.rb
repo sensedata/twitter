@@ -1,8 +1,11 @@
 require 'faraday'
-require 'oj'
+require 'yajl'
 
 module Twitter
   module Response
+    class Error < RuntimeError; end
+    class ParseError < Error; end
+
     class ParseJson < Faraday::Response::Middleware
       def parse(body)
           case body
@@ -13,7 +16,11 @@ module Twitter
           when 'false'
             false
           else
-            Oj.load(body)
+            begin
+              Yajl.load(body)
+            rescue => error
+              raise(ParseError, "Unable to read '#{body.inspect}': #{error.inspect}")
+            end
           end
       end
 
